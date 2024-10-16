@@ -1,59 +1,47 @@
-import { getLoggedInUser } from "@/lib/server/appwrite";
-import { ID } from "node-appwrite";
-import { createAdminClient } from "@/lib/server/appwrite";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+"use client";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { createAccount, loginWithEmail } from "@/db/auth";
 import { signUpWithGithub } from "@/lib/server/oauth";
+import { getLoggedInUser } from "@/lib/server/appwrite";
+import { redirect } from "next/navigation";
 
-async function signUpWithEmail(formData) {
-  "use server";
+export default function SignUpPage() {
+  const [user, setUser] = useState(null);
+  const searchParams = useSearchParams();
+  const error = searchParams.get("error");
 
-  const email = formData.get("email");
-  const password = formData.get("password");
-  const name = formData.get("name");
+  useEffect(() => {
+    const fetchUser = async () => {
+      const user = await getLoggedInUser();
+      if (user) {
+        setUser(user);
+        redirect("/account");
+      }
+    };
+    fetchUser();
+  }, []);
 
-  const { account } = await createAdminClient();
+  useEffect(() => {
+    if (error) {
+      alert(decodeURIComponent(error));
+    }
+  }, [error]);
 
-  await account.create(ID.unique(), email, password, name);
-  const session = await account.createEmailPasswordSession(email, password);
+  const handleSubmit = async (event, action) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
 
-  cookies().set("my-custom-session", session.secret, {
-    path: "/",
-    httpOnly: true,
-    sameSite: "strict",
-    secure: true,
-  });
-
-  redirect("/account");
-}
-
-async function loginWithEmail(formData) {
-  "use server";
-
-  const email = formData.get("email");
-  const password = formData.get("password");
-
-  const { account } = await createAdminClient();
-
-  const session = await account.createEmailPasswordSession(email, password);
-
-  cookies().set("my-custom-session", session.secret, {
-    path: "/",
-    httpOnly: true,
-    sameSite: "strict",
-    secure: true,
-  });
-
-  redirect("/account");
-}
-
-export default async function SignUpPage() {
-  const user = await getLoggedInUser();
-  if (user) redirect("/account");
+    if (action === "createAccount") {
+      await createAccount(formData);
+    } else if (action === "loginWithEmail") {
+      await loginWithEmail(formData);
+    }
+  };
 
   return (
     <>
-      <form action={signUpWithEmail}>
+      <form onSubmit={(e) => handleSubmit(e, "createAccount")}>
         <input id="email" name="email" placeholder="Email" type="email" />
         <input
           id="password"
@@ -65,7 +53,7 @@ export default async function SignUpPage() {
         <input id="name" name="name" placeholder="Name" type="text" />
         <button type="submit">Sign up</button>
       </form>
-      <form action={loginWithEmail}>
+      <form onSubmit={(e) => handleSubmit(e, "loginWithEmail")}>
         <input id="login-email" name="email" placeholder="Email" type="email" />
         <input
           id="login-password"
