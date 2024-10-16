@@ -42,7 +42,14 @@ export async function createAccount(formData) {
     // Attempt to create a new user
     await account.create(ID.unique(), email, password, name);
     accountCreated = true;
-    await account.createEmailPasswordSession(email, password);
+    const session = await account.createEmailPasswordSession(email, password);
+
+    cookies().set("gitknit-session", session.secret, {
+      path: "/",
+      httpOnly: true,
+      sameSite: "strict",
+      secure: true,
+    });
   } catch (error) {
     if (error instanceof AppwriteException && error.code === 409) {
       console.log("Email is already registered.");
@@ -86,7 +93,8 @@ export async function loginWithEmail(formData) {
       secure: true,
     });
     if (session.userId) {
-      redirect("/account");
+      // redirect("/account");
+      return session;
     }
   } catch (error) {
     if (error instanceof AppwriteException) {
@@ -98,8 +106,7 @@ export async function loginWithEmail(formData) {
         throw new Error(error.message);
       }
     } else {
-      console.error("Unexpected error:", error); // Log the unexpected error
-      throw new Error("An unexpected error occurred.");
+      // throw new Error(error.message);
     }
   }
 }
