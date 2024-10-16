@@ -4,12 +4,17 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #272625;
+}
+:root,
+body,
+html {
+  height: 100%;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #272625;
     --foreground: #ededed;
   }
 }
