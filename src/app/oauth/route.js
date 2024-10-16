@@ -9,7 +9,7 @@ export async function GET(request) {
   const { account } = await createAdminClient();
   const session = await account.createSession(userId, secret);
 
-  cookies().set("my-custom-session", session.secret, {
+  cookies().set("gitknit-session", session.secret, {
     path: "/",
     httpOnly: true,
     sameSite: "strict",

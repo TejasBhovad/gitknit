@@ -71,10 +71,9 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export async function createAccount(formData) {
-  const data = Object.fromEntries(formData.entries());
-  const displayName = data.name;
-  const email = data.email;
-  const password = data.password;
+  const email = formData.get("email");
+  const password = formData.get("password");
+  const displayName = formData.get("name");
 
   let accountCreated = false;
 
@@ -128,5 +127,16 @@ export async function loginWithEmail(formData) {
     } else {
       throw new Error("An unexpected error occurred.");
     }
+  }
+}
+export async function signUpWithGithub() {
+  try {
+    const callbackUrl = `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`;
+    await account.createOAuth2Session("github", callbackUrl, callbackUrl);
+  } catch (error) {
+    console.error("GitHub OAuth error:", error);
+    return {
+      error: error.message || "GitHub authentication failed",
+    };
   }
 }

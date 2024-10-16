@@ -7,7 +7,7 @@ async function signOut() {
 
   const { account } = await createSessionClient();
 
-  cookies().delete("my-custom-session");
+  cookies().delete("gitknit-session");
   await account.deleteSession("current");
 
   redirect("/signup");

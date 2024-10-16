@@ -8,6 +8,7 @@ import { redirect } from "next/navigation";
 
 export default function SignUpPage() {
   const [user, setUser] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
   const searchParams = useSearchParams();
   const error = searchParams.get("error");
 
@@ -24,7 +25,7 @@ export default function SignUpPage() {
 
   useEffect(() => {
     if (error) {
-      alert(decodeURIComponent(error));
+      setErrorMessage(decodeURIComponent(error));
     }
   }, [error]);
 
@@ -41,6 +42,7 @@ export default function SignUpPage() {
 
   return (
     <>
+      {errorMessage && <div className="error-message">{errorMessage}</div>}
       <form onSubmit={(e) => handleSubmit(e, "createAccount")}>
         <input id="email" name="email" placeholder="Email" type="email" />
         <input
