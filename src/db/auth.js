@@ -1,87 +1,46 @@
 "use server";
-// import { Account, AppwriteException, Client } from "node-appwrite";
-// import { ID } from "node-appwrite";
-// const client = new Client()
-//   .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT)
-//   .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT);
-
-// export const getUserData = async () => {
-//   try {
-//     const account = new Account(client);
-//     return await account.get();
-//   } catch (error) {
-//     if (error instanceof AppwriteException) {
-//       throw new Error(error.message);
-//     } else {
-//       throw new Error("An unexpected error occurred.");
-//     }
-//   }
-// };
-
-// export const login = async (email, password) => {
-//   try {
-//     const account = new Account(client);
-//     return await account.createEmailSession(email, password);
-//   } catch (error) {
-//     if (error instanceof AppwriteException) {
-//       throw new Error(error.message);
-//     } else {
-//       throw new Error("An unexpected error occurred.");
-//     }
-//   }
-// };
-
-// export const logout = async () => {
-//   try {
-//     const account = new Account(client);
-//     return await account.deleteSession("current");
-//   } catch (error) {
-//     if (error instanceof AppwriteException) {
-//       throw new Error(error.message);
-//     } else {
-//       throw new Error("An unexpected error occurred.");
-//     }
-//   }
-// };
-
-// export const register = async (email, password, name) => {
-//   try {
-//     const account = new Account(client);
-//     const userAccount = await account.create(
-//       ID.unique(),
-//       email,
-//       password,
-//       name
-//     );
-//     console.log(userAccount);
-//     return userAccount;
-//   } catch (error) {
-//     // throw new Error(error);
-//     if (error instanceof AppwriteException) {
-//       throw new Error(error.message);
-//     } else {
-//       throw new Error("An unexpected error occurred.");
-//     }
-//   }
-// };
-"use server";
+import { z } from "zod";
 import { AppwriteException, ID } from "node-appwrite";
 import { createAdminClient } from "@/lib/server/appwrite";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-export async function createAccount(formData) {
-  const email = formData.get("email");
-  const password = formData.get("password");
-  const displayName = formData.get("name");
+// Define validation schemas
+const createAccountSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8),
+  name: z.string().min(1),
+});
 
+const loginWithEmailSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8),
+});
+
+export async function createAccount(formData) {
+  // Validate form data
+  const result = createAccountSchema.safeParse({
+    email: formData.get("email"),
+    password: formData.get("password"),
+    name: formData.get("name"),
+  });
+
+  if (!result.success) {
+    const errorMessage = result.error.errors
+      .map((err) => err.message)
+      .join(", ");
+    redirect(`/signup?error=${encodeURIComponent(errorMessage)}`);
+    return;
+  }
+
+  const { email, password, name } = result.data;
   let accountCreated = false;
 
   try {
     const { account } = await createAdminClient();
 
     // Attempt to create a new user
-    await account.create(ID.unique(), email, password, displayName);
+    await account.create(ID.unique(), email, password, name);
     accountCreated = true;
     await account.createEmailPasswordSession(email, password);
   } catch (error) {
@@ -100,9 +59,21 @@ export async function createAccount(formData) {
 }
 
 export async function loginWithEmail(formData) {
-  const email = formData.get("email");
-  const password = formData.get("password");
+  // Validate form data
+  const result = loginWithEmailSchema.safeParse({
+    email: formData.get("email"),
+    password: formData.get("password"),
+  });
 
+  if (!result.success) {
+    const errorMessage = result.error.errors
+      .map((err) => err.message)
+      .join(", ");
+    redirect(`/login?error=${encodeURIComponent(errorMessage)}`);
+    return;
+  }
+
+  const { email, password } = result.data;
   const { account } = await createAdminClient();
 
   try {
@@ -114,21 +85,25 @@ export async function loginWithEmail(formData) {
       sameSite: "strict",
       secure: true,
     });
-
-    redirect("/account");
+    if (session.userId) {
+      redirect("/account");
+    }
   } catch (error) {
     if (error instanceof AppwriteException) {
       if (error.code === 401) {
         // 401 Unauthorized indicates invalid credentials
-        throw new Error("Invalid email or password. Please try again.");
+        console.log("Invalid email or password.");
+        redirect("/signup?error=Invalid email or password");
       } else {
         throw new Error(error.message);
       }
     } else {
+      console.error("Unexpected error:", error); // Log the unexpected error
       throw new Error("An unexpected error occurred.");
     }
   }
 }
+
 export async function signUpWithGithub() {
   try {
     const callbackUrl = `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`;
