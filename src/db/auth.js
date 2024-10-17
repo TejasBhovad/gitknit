@@ -122,3 +122,14 @@ export async function signUpWithGithub() {
     };
   }
 }
+
+export async function getSession() {
+  try {
+    const { account } = await createAdminClient();
+    const session = await account.get();
+    return session;
+  } catch (error) {
+    console.error("Failed to fetch session:", error);
+    return null;
+  }
+}

@@ -1,7 +1,7 @@
 import { createSessionClient, getLoggedInUser } from "@/lib/server/appwrite";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-
+import { Button } from "@/components/ui/button";
 async function signOut() {
   "use server";
 
@@ -32,7 +32,12 @@ export default async function HomePage() {
       </ul>
 
       <form action={signOut}>
-        <button type="submit">Sign out</button>
+        <Button
+          type="submit"
+          className="h-auto w-auto rounded-sm text-sm font-semibold"
+        >
+          Sign Out
+        </Button>
       </form>
     </>
   );

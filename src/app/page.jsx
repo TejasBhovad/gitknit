@@ -1,10 +1,7 @@
-import { getLoggedInUser } from "@/lib/server/appwrite";
-import { redirect } from "next/navigation";
+import React from "react";
 
-export default async function Home() {
-  const user = await getLoggedInUser();
+const page = () => {
+  return <div>page</div>;
+};
 
-  if (!user) redirect("/signup");
-
-  redirect("/account");
-}
+export default page;
