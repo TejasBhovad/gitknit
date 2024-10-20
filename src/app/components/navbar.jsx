@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { getLoggedInUser } from "@/lib/server/appwrite";
+import { checkLoggedIn } from "@/db/auth";
 import Link from "next/link";
 const Navbar = () => {
   const [user, setUser] = useState(null);
@@ -11,7 +11,7 @@ const Navbar = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const loggedInUser = await getLoggedInUser();
+      const loggedInUser = await checkLoggedIn();
       if (!loggedInUser) {
         router.push("/signup");
       } else {
@@ -29,6 +29,8 @@ const Navbar = () => {
           .map((name) => name[0])
           .join("")
       : "";
+
+  // const initials = "AB";
   return (
     <div className="absolute flex h-14 w-full items-center justify-between border-b-[1.5px] border-tertiary px-4 text-white">
       <Link
