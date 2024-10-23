@@ -1,21 +1,25 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { checkLoggedIn, loginWithGithub } from "@/db/auth";
+import { fetchGithubRepos } from "@/lib/github";
 import { Button } from "@/components/ui/button";
-import { account } from "@/db/auth";
+import { useGithubRepos } from "@/hooks/github";
+
 const Page = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  // const [repos, setRepos] = useState([]);
+  const {
+    data: repos,
+    isLoading,
+    error,
+    forceRefresh,
+    isRefreshing,
+    getRateLimitInfo,
+  } = useGithubRepos();
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const session = await account.getSession("current");
-        const userData = await checkLoggedIn();
-        console.log(session.provider);
-        console.log(session.providerUid);
-        console.log(session.providerAccessToken);
-        setUser(userData);
       } catch (error) {
         console.error("Failed to fetch user:", error);
       } finally {
@@ -32,28 +36,7 @@ const Page = () => {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-6">
-      {user ? (
-        <>
-          <h2 className="text-lg font-semibold">User Info:</h2>
-          <pre>{JSON.stringify(user, null, 2)}</pre>
-          <Button
-            onClick={loginWithGithub}
-            className="h-auto w-auto rounded-sm bg-red-500 px-4 py-2 text-sm font-semibold text-white hover:bg-red-600"
-          >
-            Connect GitHub
-          </Button>
-        </>
-      ) : (
-        <div>
-          <p>Please log in to view your user information.</p>
-          <Button
-            onClick={loginWithGithub}
-            className="h-auto w-auto rounded-sm bg-red-500 px-4 py-2 text-sm font-semibold text-white hover:bg-red-600"
-          >
-            Login with GitHub
-          </Button>
-        </div>
-      )}
+      <span>{JSON.stringify(repos, null, 2)}</span>
     </div>
   );
 };

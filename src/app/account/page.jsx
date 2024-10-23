@@ -1,5 +1,5 @@
 import React from "react";
-import { checkLoggedIn } from "@/db/auth";
+import { checkLoggedIn } from "@/lib/auth";
 const page = () => {
   return <div>page</div>;
 };

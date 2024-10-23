@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { checkLoggedIn } from "@/db/auth";
+import { checkLoggedIn } from "@/lib/auth";
 import Link from "next/link";
 const Navbar = () => {
   const [user, setUser] = useState(null);

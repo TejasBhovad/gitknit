@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { loginWithGithub } from "@/db/auth";
+import { loginWithGithub } from "@/lib/auth";
 import { useRouter } from "next/navigation";
 import { Github } from "lucide-react";
 export default function SignUpPage() {
