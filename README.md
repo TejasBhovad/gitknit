@@ -36,3 +36,9 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 https://appwrite.io/docs/tutorials/nextjs-ssr-auth/step-3
+
+# TODO
+
+- abstract auth to a hook and make it in context
+- secured API routes for Discord bot to call
+- Show projects and solved tickets
