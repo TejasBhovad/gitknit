@@ -2,25 +2,13 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { loginWithGithub } from "@/lib/auth";
-import { useRouter } from "next/navigation";
+
 import { Github } from "lucide-react";
 export default function SignUpPage() {
   const [user, setUser] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
   const searchParams = useSearchParams();
   const error = searchParams.get("error");
-  const router = useRouter();
-
-  // useEffect(() => {
-  //   const fetchUser = async () => {
-  //     const user = await checkLoggedIn();
-  //     if (user) {
-  //       setUser(user);
-  //       router.push("/account");
-  //     }
-  //   };
-  //   fetchUser();
-  // }, []);
 
   useEffect(() => {
     if (error) {

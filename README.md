@@ -39,6 +39,6 @@ https://appwrite.io/docs/tutorials/nextjs-ssr-auth/step-3
 
 # TODO
 
-- abstract auth to a hook and make it in context
+- abstract auth to a hook and make it in context [x]
 - secured API routes for Discord bot to call
 - Show projects and solved tickets
