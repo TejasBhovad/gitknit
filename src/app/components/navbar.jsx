@@ -3,25 +3,12 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { checkLoggedIn } from "@/lib/auth";
+import { AuthContext } from "@/context/auth";
+import { useContext } from "react";
 import Link from "next/link";
 const Navbar = () => {
-  const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const loggedInUser = await checkLoggedIn();
-      if (!loggedInUser) {
-        router.push("/signup");
-      } else {
-        setUser(loggedInUser);
-      }
-      setIsLoading(false);
-    };
-    fetchUser();
-  }, [router]);
-
+  const { user, loading } = useContext(AuthContext);
   const initials =
     user && user.name
       ? user.name
@@ -47,7 +34,7 @@ const Navbar = () => {
         />
         GitKnit
       </Link>
-      {isLoading ? (
+      {loading ? (
         <div className="flex items-center gap-2">
           <span>Loading...</span>
         </div>
@@ -62,6 +49,7 @@ const Navbar = () => {
         <button
           type="button"
           className="flex items-center gap-2 rounded border-[1.5px] border-accent/15 px-2 py-1"
+          onClick={() => router.push("/signup")}
         >
           Sign in
         </button>
