@@ -1,14 +1,13 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { checkLoggedIn } from "@/lib/auth";
-import { AuthContext } from "@/context/auth";
-import { useContext } from "react";
 import Link from "next/link";
+import { Loader } from "lucide-react";
+import React, { useContext } from "react";
+// import Icon from "./icons/icon";
+import { AuthContext } from "@/context/auth";
+
 const Navbar = () => {
-  const router = useRouter();
   const { user, loading } = useContext(AuthContext);
+
   const initials =
     user && user.name
       ? user.name
@@ -17,26 +16,19 @@ const Navbar = () => {
           .join("")
       : "";
 
-  // const initials = "AB";
   return (
-    <div className="absolute flex h-14 w-full items-center justify-between border-b-[1.5px] border-tertiary px-4 text-white">
+    <div className="text-accen15 absolute flex h-14 w-full items-center justify-between border-b-[1.5px] border-white/15 px-4">
       <Link
         href="/"
         type="button"
-        className="flex h-auto items-center justify-center gap-1 rounded border-[1.5px] border-accent/15 bg-secondary px-2 py-1 text-lg font-semibold"
+        className="flex h-auto items-center justify-center gap-1 rounded border-[1.5px] border-accent/15 px-2 py-1 text-lg font-semibold"
       >
-        <Image
-          src="./gitknit.svg"
-          alt="logo"
-          width={48}
-          height={48}
-          className="aspect-square w-7"
-        />
-        GitKnit
+        {/* <Icon name="logo" className="h-6 w-6" /> */}
+        BugBank
       </Link>
       {loading ? (
-        <div className="flex items-center gap-2">
-          <span>Loading...</span>
+        <div className="flex -translate-x-1 items-center gap-2">
+          <Loader className="animate-spin" size={24} />
         </div>
       ) : user ? (
         <Link
@@ -46,13 +38,12 @@ const Navbar = () => {
           {initials}
         </Link>
       ) : (
-        <button
-          type="button"
-          className="flex items-center gap-2 rounded border-[1.5px] border-accent/15 px-2 py-1"
-          onClick={() => router.push("/signup")}
+        <Link
+          href="/signup"
+          className="flex items-center gap-2 rounded border-[1.5px] border-accent/15 px-2 py-1 text-white"
         >
           Sign in
-        </button>
+        </Link>
       )}
     </div>
   );

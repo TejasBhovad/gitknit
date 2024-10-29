@@ -3,11 +3,6 @@ import { checkLoggedIn } from "@/lib/auth";
 import React, { useState, useEffect } from "react";
 import { AuthContext } from "@/context/auth";
 import { logout } from "@/lib/auth";
-import { addUserToDatabase } from "@/db/user";
-
-async function addUser(user) {
-  await addUserToDatabase(user);
-}
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -35,12 +30,6 @@ export const AuthProvider = ({ children }) => {
 
     fetchUser();
   }, []);
-
-  useEffect(() => {
-    if (user && !loading) {
-      addUser(user);
-    }
-  }, [user, loading]);
 
   return (
     <AuthContext.Provider

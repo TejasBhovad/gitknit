@@ -10,7 +10,7 @@ export async function addUserToDatabase(user) {
   try {
     const check = await databases.listDocuments(
       process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
-      process.env.NEXT_PUBLIC_USER_COLLECTION_ID,
+      process.env.NEXT_PUBLIC_USER_ID,
       [Query.equal("user_email", user.email)],
     );
 

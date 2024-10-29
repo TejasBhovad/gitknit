@@ -1,6 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { loginWithGithub } from "@/lib/auth";
 
 import { Github } from "lucide-react";
@@ -28,10 +28,10 @@ export default function SignUpPage() {
         <span className="w-full items-center justify-center text-center text-xl font-semibold text-gray-300">
           Sign in to GitKnit
         </span>
-        <form action={loginWithGithub} className=" ">
+        <form action={loginWithGithub} className="">
           <button
             type="submit"
-            className="mt-4 w-full rounded-md border-[1.5px] border-tertiary bg-foreground py-2 text-lg font-medium text-white transition-colors hover:border-accent/50 hover:bg-foreground/80 focus:outline-none focus:ring-2 focus:ring-accent"
+            className="mt-4 w-full rounded-md border-[1.5px] border-tertiary bg-foreground bg-white/10 py-2 text-lg font-medium text-white transition-colors hover:border-accent/50 hover:bg-foreground/80 hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-accent"
           >
             <Github size={24} className="mr-2 inline-block text-accent" />
             Sign up with GitHub
