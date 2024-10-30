@@ -11,15 +11,7 @@ const Page = () => {
     setIsMounted(true);
     return () => setIsMounted(false);
   }, []);
-  const handlefetchRepos = async () => {
-    if (!user) return;
-    const {
-      data: repositories,
-      isLoading,
-      error,
-    } = useFetchRepositories(user.user.email);
-    setRepositories(repositories);
-  };
+
   useEffect(() => {
     if (!isMounted) return;
     if (!user) return;

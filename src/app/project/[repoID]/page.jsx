@@ -18,7 +18,7 @@ import { Separator } from "@/components/ui/separator";
 
 import { useParams } from "next/navigation";
 import { useState } from "react";
-const page = () => {
+const ProjectPage = () => {
   const { repoID } = useParams();
   const [selectedThread, setSelectedThread] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -162,4 +162,4 @@ const page = () => {
     </div>
   );
 };
-export default page;
+export default ProjectPage;

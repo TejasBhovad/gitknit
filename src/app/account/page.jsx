@@ -46,7 +46,7 @@ const Page = () => {
     };
 
     fetchUserData();
-  }, [user, isMounted]);
+  }, [user, isMounted, isUserVerified]);
 
   useEffect(() => {
     if (!isMounted) return;
@@ -55,17 +55,14 @@ const Page = () => {
     const manageUserData = async () => {
       try {
         const cache = await caches.open(CACHE_NAME);
-        // Check for cached response
         const cachedResponse = await cache.match(CACHE_KEY);
 
         let userDoc;
         if (cachedResponse) {
-          // If user data is cached, we can assume it's valid
           userDoc = JSON.parse(await cachedResponse.text());
           console.log("Using cached user data:", userDoc);
           setIsUserVerified(true); // Mark as verified since we have valid cached data
         } else {
-          // If no cache, check database
           userDoc = await getUserByEmail({ email: userData.user.email });
           if (!userDoc) {
             console.log("User does not exist in database, adding user...");
@@ -90,7 +87,7 @@ const Page = () => {
     };
 
     manageUserData();
-  }, [userData, isMounted]);
+  }, [userData, isMounted, isUserVerified]); // Added isUserVerified here
 
   const handleLogoutClick = async () => {
     try {
