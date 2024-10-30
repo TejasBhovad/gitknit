@@ -1,6 +1,6 @@
 # GitKnit
 
-Tool that allows you to push your discord server's threads to a centralised website for easy access. Consider it Stack overflow that indexes your discord server's threads.
+Tool that allows you to push your discord server's threads to a centralised website for easy access. Consider it Stack overflow that indexes your discord server's threads. You select the a repository and the bot will push the threads of selected channel to the website.
 
 > Consists of a discord bot and a website.
 
@@ -10,6 +10,9 @@ Tool that allows you to push your discord server's threads to a centralised webs
 2. Initialise the bot in a forums channel(in any thread) using the `/init` command.
 3. Follow the instructions to link the bot with your github repository.
 4. Push the thread to the website using the `/push` command.
+
+> Note: The discord bot is hosted by me locally, so it might not be available all the time.
+> YI am working on creating a guide to host the bot on your own server.
 
 ### Discord Bot
 
