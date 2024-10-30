@@ -2,7 +2,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/auth";
 import { addUserToDatabase, getUserByEmail } from "@/db/user";
-
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CheckCircle, LogOut, User } from "lucide-react";
 const LoadingSpinner = () => (
   <div className="flex min-h-screen items-center justify-center">
     <div className="h-32 w-32 animate-spin rounded-full border-b-2 border-t-2 border-primary"></div>
@@ -106,27 +108,47 @@ const Page = () => {
   }
 
   return (
-    <div className="container mx-auto max-w-4xl p-6">
-      <h1 className="mb-6 text-2xl font-bold">Account</h1>
-      <div className="p-6">
-        {user ? (
-          <div className="space-y-4">
-            <p>Welcome, {user.name}</p>
-            <p>Email: {user.email}</p>
-            <div className="flex flex-col gap-2">
-              <p className="font-medium text-green-600">✓ You are logged in</p>
-              <button
-                onClick={handleLogoutClick}
-                className="rounded bg-red-500 px-4 py-2 text-white transition-colors hover:bg-red-600"
-              >
-                Logout
-              </button>
+    <div className="container mx-auto max-w-2xl p-6">
+      <Card className="overflow-hidden bg-black/25">
+        <CardHeader className="bg-accent text-white">
+          <CardTitle className="flex items-center text-lg font-bold">
+            <User className="mr-2 h-5 w-5" />
+            Account
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-6">
+          {user ? (
+            <div className="space-y-4">
+              <div className="rounded-lg bg-secondary p-4">
+                <h2 className="mb-2 text-lg font-semibold">
+                  Welcome, {user.user.name}
+                </h2>
+                <p className="text-muted-foreground">
+                  Email: {user.user.email}
+                </p>
+              </div>
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center text-green-600">
+                  <CheckCircle className="mr-2 h-5 w-5" />
+                  <span className="font-medium">You are logged in</span>
+                </div>
+                <Button
+                  variant="destructive"
+                  onClick={handleLogoutClick}
+                  className="w-full bg-red-500/25 hover:bg-red-600/25 sm:w-auto"
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Logout
+                </Button>
+              </div>
             </div>
-          </div>
-        ) : (
-          <p>User not logged in</p>
-        )}
-      </div>
+          ) : (
+            <div className="rounded-lg bg-secondary p-4 text-center">
+              <p className="text-muted-foreground">User not logged in</p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 };
