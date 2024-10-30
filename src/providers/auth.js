@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
     setMounted(true);
     const fetchUser = async () => {
       const user = await checkLoggedIn();
-      console.log("User PROVIDER:", user);
+      // console.log("User PROVIDER:", user);
       if (user?.error) {
         setUser(null);
         setLoading(false);

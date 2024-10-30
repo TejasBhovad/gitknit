@@ -14,6 +14,7 @@ import { useGithubRepos } from "@/hooks/github";
 import React, { useState } from "react";
 import { AuthContext } from "@/context/auth";
 import { useContext } from "react";
+import { useRouter } from "next/navigation";
 import {
   Select,
   SelectContent,
@@ -23,6 +24,7 @@ import {
 } from "@/components/ui/select";
 
 const Page = () => {
+  const router = useRouter();
   const [selectedRepo, setSelectedRepo] = useState(""); // Added state for selected repo
   const { user, loading } = useContext(AuthContext);
   const {
@@ -63,14 +65,17 @@ const Page = () => {
     console.log("Creating repository...");
     console.log(selectedRepository);
     console.log(channelId);
-    console.log(user.email);
-    await addRepository({
+    console.log(user.user.email);
+    const repo = await addRepository({
       channel_id: channelId,
-      email: user.email,
+      email: user.user.email,
       name: selectedRepository.fullName,
       is_private: selectedRepository.isPrivate,
       source: selectedRepository.url,
     });
+    console.log("Repository created:", repo);
+    const repoId = repo["$id"];
+    router.push(`/verify?repoId=${repoId}`);
   };
 
   return (
@@ -108,13 +113,13 @@ const Page = () => {
         </Card>
 
         {/* Display selected repository details */}
-        {selectedRepository && (
+        {/* {selectedRepository && (
           <div className="mt-4 space-y-2">
             {JSON.stringify(selectedRepository, null, 2)}
           </div>
         )}
 
-        <div className="mt-4">channelId: {channelId}</div>
+        <div className="mt-4">channelId: {channelId}</div> */}
       </div>
     </div>
   );

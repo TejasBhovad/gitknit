@@ -2,15 +2,15 @@
 import Link from "next/link";
 import { Loader } from "lucide-react";
 import React, { useContext } from "react";
-// import Icon from "./icons/icon";
+import Image from "next/image";
 import { AuthContext } from "@/context/auth";
 
 const Navbar = () => {
   const { user, loading } = useContext(AuthContext);
 
   const initials =
-    user && user.name
-      ? user.name
+    user && user.user.name
+      ? user.user.name
           .split(" ")
           .map((name) => name[0])
           .join("")
@@ -21,10 +21,16 @@ const Navbar = () => {
       <Link
         href="/"
         type="button"
-        className="flex h-auto items-center justify-center gap-1 rounded border-[1.5px] border-accent/15 px-2 py-1 text-lg font-semibold"
+        className="flex h-auto items-center justify-center gap-1 rounded border-[1.5px] border-accent/15 bg-secondary px-2 py-1 text-lg font-semibold"
       >
-        {/* <Icon name="logo" className="h-6 w-6" /> */}
-        BugBank
+        <Image
+          src="./gitknit.svg"
+          alt="logo"
+          width={48}
+          height={48}
+          className="aspect-square w-7"
+        />
+        GitKnit
       </Link>
       {loading ? (
         <div className="flex -translate-x-1 items-center gap-2">
