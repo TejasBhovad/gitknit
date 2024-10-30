@@ -1,7 +1,19 @@
 "use client";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { addRepository } from "@/db/repository";
+import { Button } from "@/components/ui/button";
 import { useSearchParams } from "next/navigation";
 import { useGithubRepos } from "@/hooks/github";
-import React, { useState } from "react"; // Added useState import
+import React, { useState } from "react";
+import { AuthContext } from "@/context/auth";
+import { useContext } from "react";
 import {
   Select,
   SelectContent,
@@ -12,7 +24,7 @@ import {
 
 const Page = () => {
   const [selectedRepo, setSelectedRepo] = useState(""); // Added state for selected repo
-
+  const { user, loading } = useContext(AuthContext);
   const {
     data: repos,
     isLoading,
@@ -32,34 +44,78 @@ const Page = () => {
     return <div>Error loading repositories: {error.message}</div>;
   }
 
-  // Find the selected repository object based on the selected ID
   const selectedRepository = repos?.find(
     (repo) => repo.id.toString() === selectedRepo,
   );
 
+  const handleCreateRepo = async () => {
+    if (!selectedRepository) {
+      return;
+    }
+    if (!channelId) {
+      return;
+    }
+    if (!user) {
+      console.log("User not found");
+      return;
+    }
+
+    console.log("Creating repository...");
+    console.log(selectedRepository);
+    console.log(channelId);
+    console.log(user.email);
+    await addRepository({
+      channel_id: channelId,
+      email: user.email,
+      name: selectedRepository.fullName,
+      is_private: selectedRepository.isPrivate,
+      source: selectedRepository.url,
+    });
+  };
+
   return (
-    <div className="p-4">
-      <Select value={selectedRepo} onValueChange={setSelectedRepo}>
-        <SelectTrigger className="w-[280px] border border-white/10">
-          <SelectValue placeholder="Select a repository" />
-        </SelectTrigger>
-        <SelectContent>
-          {repos?.map((repo) => (
-            <SelectItem key={repo.id} value={repo.id.toString()}>
-              {repo.name}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+    <div className="flex flex-col items-center justify-center">
+      <div className="flex h-full w-full max-w-6xl flex-col items-center p-4">
+        <Card className="my-4 w-2/3 max-w-xl border border-tertiary bg-background">
+          <CardHeader>
+            <CardTitle>Select repository</CardTitle>
+            <CardDescription>
+              This repository be linked with your discord channel
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Select value={selectedRepo} onValueChange={setSelectedRepo}>
+              <SelectTrigger className="max-w-[280px] border border-white/10">
+                <SelectValue placeholder="Select a repository" />
+              </SelectTrigger>
+              <SelectContent>
+                {repos?.map((repo) => (
+                  <SelectItem key={repo.id} value={repo.id.toString()}>
+                    {repo.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </CardContent>
+          <CardFooter>
+            <Button
+              className="w-fit bg-accent font-semibold text-white hover:bg-accent/80"
+              onClick={handleCreateRepo}
+            >
+              Continue
+            </Button>
+          </CardFooter>
+        </Card>
 
-      {/* Display selected repository details */}
-      {selectedRepository && (
-        <div className="mt-4 space-y-2">
-          {JSON.stringify(selectedRepository, null, 2)}
-        </div>
-      )}
+        {/* Display selected repository details */}
+        {selectedRepository && (
+          <div className="mt-4 space-y-2">
+            {JSON.stringify(selectedRepository, null, 2)}
+          </div>
+        )}
 
-      <div className="mt-4">channelId: {channelId}</div>
+        <div className="mt-4">channelId: {channelId}</div>
+      </div>
     </div>
   );
 };

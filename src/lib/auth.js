@@ -1,6 +1,6 @@
 import { Client, Account, OAuthProvider, Models } from "appwrite";
-import { NextResponse } from "next/server";
 
+// Initialize Appwrite client
 const client = new Client()
   .setEndpoint("https://cloud.appwrite.io/v1")
   .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT ?? "");
@@ -8,21 +8,18 @@ const client = new Client()
 const account = new Account(client);
 
 export async function loginWithGithub() {
-  const successUrl = new URL(
-    "/account",
-    process.env.NEXT_PUBLIC_APP_URL ?? "",
-  ).toString();
-  const failureUrl = new URL(
-    "/signup",
-    process.env.NEXT_PUBLIC_APP_URL ?? "",
-  ).toString();
+  if (!process.env.NEXT_PUBLIC_APP_URL) {
+    throw new Error("NEXT_PUBLIC_APP_URL environment variable is not set");
+  }
+  const successUrl = `${process.env.NEXT_PUBLIC_APP_URL}/account`;
+  const failureUrl = `${process.env.NEXT_PUBLIC_APP_URL}/signup`;
 
   try {
-    await account.createOAuth2Session(
+    return await account.createOAuth2Session(
       OAuthProvider.Github,
       successUrl,
       failureUrl,
-      ["repo", "user"],
+      ["repo", "user", "account"],
     );
   } catch (error) {
     console.error("GitHub OAuth error:", error);
@@ -31,11 +28,25 @@ export async function loginWithGithub() {
 }
 
 export async function checkLoggedIn() {
+  console.log("Checking login status...");
+
   try {
+    // First check if there's an active session
+    const session = await account.getSession("current");
+    // console.log("Active session found:", session);
+
     const user = await account.get();
-    return { user };
+    // console.log("User details retrieved:", user);
+
+    return {
+      user: {
+        name: user.name,
+        email: user.email,
+      },
+    };
   } catch (error) {
-    // Handle specific error cases
+    console.error("Login check error:", error);
+
     if (error?.code === 401) {
       return { user: null, error: "User not authenticated" };
     }
@@ -43,28 +54,39 @@ export async function checkLoggedIn() {
       return { user: null, error: "Rate limit exceeded" };
     }
 
-    console.error("Authentication check failed:", error);
-    return { user: null, error: "Authentication check failed" };
+    return {
+      user: null,
+      error: "Authentication check failed",
+      details: error instanceof Error ? error.message : "Unknown error",
+    };
   }
 }
 
 export async function logout() {
+  console.log("Initiating logout...");
+
   try {
     await account.deleteSession("current");
+    console.log("Logout successful");
   } catch (error) {
-    // Handle specific logout errors
+    console.error("Logout error:", error);
+
     if (error?.code === 401) {
-      // User is already logged out, no need to throw
+      console.log("User already logged out");
       return;
     }
-    console.error("Logout failed:", error);
+
     throw new Error("Failed to logout");
   }
 }
 
 export async function isAuthenticated() {
-  const { user, error } = await checkLoggedIn();
-  return Boolean(user);
+  try {
+    const session = await account.getSession("current");
+    return Boolean(session);
+  } catch {
+    return false;
+  }
 }
 
-export { client, account };
+export { account };
