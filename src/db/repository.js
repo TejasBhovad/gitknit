@@ -83,3 +83,72 @@ export async function getRepositoriesByEmail({ email }) {
     return [];
   }
 }
+
+export async function getRepositoryByID({ repoID }) {
+  try {
+    if (!repoID) {
+      throw new Error("Repository ID must be provided");
+    }
+
+    const response = await databases.getDocument(
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
+      process.env.NEXT_PUBLIC_APPWRITE_REPOSITORIES_ID,
+      repoID,
+    );
+
+    return response;
+  } catch (error) {
+    console.error("Error getting repository from database:", error);
+    return null;
+  }
+}
+
+// export async function searchRepositories({ searchTerm }) {
+//   try {
+//     if (!searchTerm) {
+//       throw new Error("Search term must be provided");
+//     }
+
+//     // Search repositories by name
+//     const repoResponse = await databases.listDocuments(
+//       process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
+//       process.env.NEXT_PUBLIC_APPWRITE_REPOSITORIES_ID,
+//       [Query.search("name", searchTerm)],
+//     );
+
+//     // Search threads by content
+//     const threadResponse = await databases.listDocuments(
+//       process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
+//       process.env.NEXT_PUBLIC_APPWRITE_THREADS_ID,
+//       [Query.search("content", searchTerm)],
+//     );
+
+//     // Combine results
+//     const combinedResults = [...repoResponse.documents];
+
+//     // Add threads to results
+//     threadResponse.documents.forEach((thread) => {
+//       const repoIndex = combinedResults.findIndex(
+//         (repo) => repo.channel_id === thread.channel_id,
+//       );
+//       if (repoIndex !== -1) {
+//         // If the repository already exists, add the thread to the repository's threads
+//         if (!combinedResults[repoIndex].threads) {
+//           combinedResults[repoIndex].threads = [];
+//         }
+//         combinedResults[repoIndex].threads.push(thread);
+//       } else {
+//         // If the repository does not exist, create a new entry with the thread
+//         combinedResults.push({
+//           ...thread,
+//           threads: [thread],
+//         });
+//       }
+//     });
+
+//     return combinedResults;
+//   } catch (error) {
+//     console.error("Error searching repositories:", error);
+//     return [];
+//   }
+// }

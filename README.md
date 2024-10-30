@@ -1,44 +1,37 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# GitKnit
 
-## Getting Started
+Tool that allows you to push your discord server's threads to a centralised website for easy access. Consider it Stack overflow that indexes your discord server's threads.
 
-First, run the development server:
+> Consists of a discord bot and a website.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Usage
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. Install the discord bot in your discord server. [Invite Link](https://discord.com/oauth2/authorize?client_id=1292501643224678492)
+2. Initialise the bot in a forums channel(in any thread) using the `/init` command.
+3. Follow the instructions to link the bot with your github repository.
+4. Push the thread to the website using the `/push` command.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### Discord Bot
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Our Discord Bot is Open Source [here](https://github.com/TejasBhovad/gitknit-bot)
 
-## Learn More
+## Features
 
-To learn more about Next.js, take a look at the following resources:
+### Discord Bot
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Created a discord bot that will give you access to the following commands:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- `/init`: to initialise the bot in a channel and link it with github repository.
+- `/push`: to push the thread to the website.
+- `/close`: to close the thread.
 
-## Deploy on Vercel
+### Website
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Website that will display all the threads in a centralised location.
+- In teh future, we can add search functionality to search for threads globally and give them better SEO.
+- Also looking to add a feature that allows website users to interact with the threads.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Tech Stack
 
-https://appwrite.io/docs/tutorials/nextjs-ssr-auth/step-3
-
-# TODO
-
-- abstract auth to a hook and make it in context [x]
-- secured API routes for Discord bot to call
-- Show projects and solved tickets
+- Discord Bot: Python, Appwrite, Discord API
+- Website: Next.js, Tailwind CSS, Appwrite, tanstack/react-query

@@ -1,4 +1,5 @@
 import { getRepositoriesByEmail } from "@/db/repository";
+import { getRepositoryByID } from "@/db/repository";
 import { useQueryClient } from "@tanstack/react-query";
 import { useQuery } from "@tanstack/react-query";
 import { useMutation } from "@tanstack/react-query";
@@ -13,6 +14,14 @@ export function useFetchRepositories(email) {
     onSuccess: (data) => {
       queryClient.setQueryData(["repositories", email], data);
     },
+  });
+}
+
+export function useFetchRepository(repoID) {
+  return useQuery({
+    queryKey: ["repository", repoID],
+    queryFn: async () => await getRepositoryByID({ repoID }),
+    enabled: !!repoID,
   });
 }
 

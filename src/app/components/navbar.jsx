@@ -24,7 +24,7 @@ const Navbar = () => {
         className="flex h-auto items-center justify-center gap-1 rounded border-[1.5px] border-accent/15 bg-secondary px-2 py-1 text-lg font-semibold"
       >
         <Image
-          src="./gitknit.svg"
+          src="/gitknit.svg"
           alt="logo"
           width={48}
           height={48}
@@ -37,12 +37,21 @@ const Navbar = () => {
           <Loader className="animate-spin" size={24} />
         </div>
       ) : user ? (
-        <Link
-          href="/account"
-          className="flex aspect-square h-2/3 items-center justify-center gap-4 rounded-full bg-accent/25"
-        >
-          {initials}
-        </Link>
+        <div className="flex h-full w-auto items-center gap-2">
+          <Link
+            href="/dashboard"
+            className="flex h-2/3 w-fit items-center justify-center gap-4 rounded-sm bg-tertiary/50 px-4 py-1"
+          >
+            Dashboard
+          </Link>
+
+          <Link
+            href="/account"
+            className="flex aspect-square h-2/3 items-center justify-center gap-4 rounded-full bg-accent/25"
+          >
+            {initials}
+          </Link>
+        </div>
       ) : (
         <Link
           href="/signup"
