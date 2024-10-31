@@ -34,6 +34,10 @@ Created a discord bot that will give you access to the following commands:
 - In teh future, we can add search functionality to search for threads globally and give them better SEO.
 - Also looking to add a feature that allows website users to interact with the threads.
 
+![Website](/github/gk2.jpeg)
+![Website](/github/gk3.jpeg)
+![Website](/github/gk1.jpeg)
+
 ## Tech Stack
 
 - Discord Bot: Python, Appwrite, Discord API
